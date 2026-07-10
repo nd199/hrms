@@ -1,10 +1,40 @@
-HELP.md
+# ===========================================
+# Java / Maven / Spring Boot
+# ===========================================
+
+# Maven
 target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# Gradle
+.gradle
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+out/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# IDE - IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+.idea_modules/
+*.swp
+*.swo
+
+# IDE - Eclipse
 .apt_generated
 .classpath
 .factorypath
@@ -13,13 +43,7 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
+# IDE - NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -29,5 +53,250 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
+# IDE - VS Code
 .vscode/
+.vscode-test/
+
+# IDE - General
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ===========================================
+# Logs and Databases
+# ===========================================
+
+# Logs
+logs/
+*.log
+*.log.*
+log/
+*.out
+*.err
+
+# Database
+*.db
+*.sql
+*.sqlite
+*.h2.db
+*.mv.db
+
+# ===========================================
+# OS Generated Files
+# ===========================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================================
+# Application Configuration
+# ===========================================
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Spring Boot configuration overrides
+application-local.properties
+application-dev.properties
+application-prod.properties
+application-test.properties
+config.properties
+
+# ===========================================
+# Test and Coverage
+# ===========================================
+
+# Test reports
+test-output/
+test-results/
+*.test
+*.tests
+.surefire*
+.failsafe*
+
+# Code coverage
+jacoco.exec
+jacoco-it.exec
+coverage/
+.nyc_output/
+lcov.info
+*.lcov
+
+# ===========================================
+# Package and Distribution
+# ===========================================
+
+# JAR files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# ===========================================
+# Temporary and Cache Files
+# ===========================================
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# Cache directories
+.cache/
+.vertx/
+node_modules/
+jspm_packages/
+
+# ===========================================
+# Documentation and Help
+# ===========================================
+
+# Generated documentation
+HELP.md
+docs/build/
+site/
+
+# ===========================================
+# Docker and Kubernetes
+# ===========================================
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+kubeconfig*
+
+# ===========================================
+# Miscellaneous
+# ===========================================
+
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# ===========================================
+# Git
+# ===========================================
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+# ===========================================
+# IDE Specific - Additional
+# ===========================================
+
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# TextMate
+*.tmproj
+*.tmproject
+
+# Vim
+*~
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===========================================
+# Security and Secrets
+# ===========================================
+
+# Keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Secrets
+secrets/
+secrets.yml
+secrets.yaml
+credentials.json
+service-account*.json
+
+# ===========================================
+# Build and Deployment
+# ===========================================
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot devtools
+.spring-boot-devtools.properties
+
+# ===========================================
+# End of .gitignore
+# ===========================================
