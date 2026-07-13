@@ -1,15 +1,14 @@
 package com.naren.humanresourcemanagement.Service.Impl;
 
-import com.naren.humanresourcemanagement.DTO.EmployeeCreateRequest;
-import com.naren.humanresourcemanagement.DTO.EmployeeResponse;
-import com.naren.humanresourcemanagement.DTO.EmployeeUpdateRequest;
+import com.naren.humanresourcemanagement.DTO.*;
 import com.naren.humanresourcemanagement.DTO.mapper.EmployeeMapper;
 import com.naren.humanresourcemanagement.Entity.Employee;
 import com.naren.humanresourcemanagement.Entity.Enums.EmploymentStatus;
 import com.naren.humanresourcemanagement.Exception.ResourceNotFoundException;
 import com.naren.humanresourcemanagement.Repository.EmployeeRepository;
 import com.naren.humanresourcemanagement.Service.EmployeeService;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,63 +18,66 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("employeeQueryService")
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EmployeeQService implements EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
-    private final EmployeeMapper employeeMapper;
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeQService.class);
+
+    private final EmployeeRepository repo;
+    private final EmployeeMapper mapper;
+
+    public EmployeeQService(EmployeeRepository repo, EmployeeMapper mapper) {
+        this.repo = repo;
+        this.mapper = mapper;
+    }
+
 
     @Override
     public EmployeeResponse getEmployeeById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Employee not found with id: " + id)
-                );
-        return employeeMapper.apply(employee);
+        Employee employee = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
+        return mapper.apply(employee);
     }
 
     @Override
     public EmployeeResponse getEmployeeByCode(String employeeCode) {
-        Employee employee = employeeRepository.findByEmployeeCode(employeeCode)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Employee not found with code: " + employeeCode)
-                );
-        return employeeMapper.apply(employee);
+        Employee employee = repo.findByEmployeeCode(employeeCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with code: " + employeeCode));
+        return mapper.apply(employee);
     }
 
     @Override
     public Page<EmployeeResponse> getAllEmployees(Pageable pageable) {
-        return employeeRepository.findAll(pageable).map(employeeMapper);
+        return repo.findAll(pageable).map(mapper);
     }
 
     @Override
     public List<EmployeeResponse> getEmployeesByDepartment(Long departmentId) {
-        return employeeRepository.findByDepartmentId(departmentId)
+        return repo.findByDepartmentId(departmentId)
                 .stream()
-                .map(employeeMapper)
+                .map(mapper)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<EmployeeResponse> getEmployeesByStatus(EmploymentStatus status) {
-        return employeeRepository.findByEmploymentStatus(status)
+        return repo.findByEmploymentStatus(status)
                 .stream()
-                .map(employeeMapper)
+                .map(mapper)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<EmployeeResponse> getEmployeesByManager(Long managerId) {
-        return employeeRepository.findByManagerId(managerId)
+        return repo.findByManagerId(managerId)
                 .stream()
-                .map(employeeMapper)
+                .map(mapper)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Page<EmployeeResponse> searchEmployees(String keyword, Pageable pageable) {
-        return employeeRepository.searchEmployees(keyword, pageable).map(employeeMapper);
+        return repo.searchEmployees(keyword, pageable).map(mapper);
     }
 
     @Override

@@ -1,9 +1,9 @@
 # ===========================================
-# Java / Maven / Spring Boot
+# Java / Maven / Spring Boot (Backend)
 # ===========================================
 
 # Maven
-target/
+backend/target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -25,16 +25,44 @@ out/
 gradle-app.setting
 !gradle-wrapper.jar
 
-# IDE - IntelliJ IDEA
-.idea
+# ===========================================
+# Node / Vite / React (Frontend)
+# ===========================================
+
+# Dependencies
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+frontend/dist-ssr/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local env files
+frontend/.env
+frontend/.env.*.local
+
+# ===========================================
+# IDE / Editor
+# ===========================================
+
+# IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 .idea_modules/
-*.swp
-*.swo
 
-# IDE - Eclipse
+# VS Code
+.vscode/
+.vscode-test/
+
+# Eclipse
 .apt_generated
 .classpath
 .factorypath
@@ -43,45 +71,47 @@ gradle-app.setting
 .springBeans
 .sts4-cache
 
-# IDE - NetBeans
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-# IDE - VS Code
-.vscode/
-.vscode-test/
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
 
-# IDE - General
+# TextMate
+*.tmproj
+*.tmproject
+
+# Vim
+*~
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# General IDE
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-# ===========================================
-# Logs and Databases
-# ===========================================
-
-# Logs
-logs/
-*.log
-*.log.*
-log/
-*.out
-*.err
-
-# Database
-*.db
-*.sql
-*.sqlite
-*.h2.db
-*.mv.db
 
 # ===========================================
 # OS Generated Files
@@ -110,6 +140,25 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
+
+# ===========================================
+# Logs and Databases
+# ===========================================
+
+# Logs
+logs/
+*.log
+*.log.*
+log/
+*.out
+*.err
+
+# Database
+*.db
+*.sql
+*.sqlite
+*.h2.db
+*.mv.db
 
 # ===========================================
 # Application Configuration
@@ -157,6 +206,7 @@ lcov.info
 *.jar
 *.war
 *.ear
+*.nar
 *.zip
 *.tar.gz
 *.rar
@@ -176,8 +226,6 @@ temp/
 # Cache directories
 .cache/
 .vertx/
-node_modules/
-jspm_packages/
 
 # ===========================================
 # Documentation and Help
@@ -199,74 +247,6 @@ docker-compose.override.yml
 # Kubernetes
 *.kubeconfig
 kubeconfig*
-
-# ===========================================
-# Miscellaneous
-# ===========================================
-
-# Compiled class files
-*.class
-
-# Package files
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# Virtual machine crash logs
-hs_err_pid*
-replay_pid*
-
-# ===========================================
-# Git
-# ===========================================
-
-# Git
-.git/
-.gitignore
-.gitattributes
-.gitmodules
-
-# ===========================================
-# IDE Specific - Additional
-# ===========================================
-
-# JetBrains
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Sublime Text
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-*.sublime-project
-
-# TextMate
-*.tmproj
-*.tmproject
-
-# Vim
-*~
-.*.sw[a-z]
-*.un~
-Session.vim
-.netrwhist
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
 
 # ===========================================
 # Security and Secrets
@@ -297,6 +277,9 @@ service-account*.json
 # Spring Boot devtools
 .spring-boot-devtools.properties
 
-# ===========================================
-# End of .gitignore
-# ===========================================
+# Compiled class files
+*.class
+
+# Virtual machine crash logs
+hs_err_pid*
+replay_pid*
