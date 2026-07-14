@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: leave-service
+  datasource:
+    url: jdbc:postgresql://localhost:5435/leave_db
+    username: leave_user
+    password: leave_pass
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8084
