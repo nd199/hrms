@@ -226,6 +226,7 @@ temp/
 # Cache directories
 .cache/
 .vertx/
+jspm_packages/
 
 # ===========================================
 # Documentation and Help
