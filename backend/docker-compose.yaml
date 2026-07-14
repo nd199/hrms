@@ -1,38 +1,50 @@
 services:
-  pg:
-    container_name: hrms_db
+  # === Employee Database ===
+  employee-pg:
+    container_name: employee_db
     image: postgres:17
     restart: unless-stopped
     environment:
-      POSTGRES_DB: hrms
-      POSTGRES_USER: hrms_user
-      POSTGRES_PASSWORD: hrms_pass
+      POSTGRES_DB: employee_db
+      POSTGRES_USER: employee_user
+      POSTGRES_PASSWORD: employee_pass
     ports:
-      - "5332:5432"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - employee_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hrms_user -d hrms"]
+      test: ["CMD-SHELL", "pg_isready -U employee_user -d employee_db"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  backend:
-    container_name: hrms_backend
+  # === Employee Microservice ===
+  employee-service:
+    container_name: employee_service
     build:
-      context: .
+      context: ./employee-service
       dockerfile: Dockerfile
-    image: naren06251999/hrms-backend:latest
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://pg:5432/hrms
-      SPRING_DATASOURCE_USERNAME: hrms_user
-      SPRING_DATASOURCE_PASSWORD: hrms_pass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://employee-pg:5432/employee_db
+      SPRING_DATASOURCE_USERNAME: employee_user
+      SPRING_DATASOURCE_PASSWORD: employee_pass
     depends_on:
-      pg:
+      employee-pg:
         condition: service_healthy
-
+  # === API Gateway ===
+  gateway:
+    container_name: hrms_gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      EMPLOYEE_SERVICE_URL: http://employee-service:8081
+    depends_on:
+      - employee-service
 volumes:
-  postgres_data:
+  employee_data:

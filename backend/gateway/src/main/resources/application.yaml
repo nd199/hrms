@@ -4,17 +4,11 @@ spring:
   cloud:
     gateway:
       routes:
-        # Employee
         - id: employee-service
           uri: ${EMPLOYEE_SERVICE_URL}
           predicates:
-           - Path=/api/employees/**
+            - Path=/api/employees/**
 
-        #Monolith for now
-        - id: backend
-          uri: ${BACKEND_URL}
-          predicates:
-              - Path=/**
       globalcors:
         corsConfiguration:
           '[/**]':
@@ -24,4 +18,3 @@ spring:
 
 server:
   port: 8082
-
