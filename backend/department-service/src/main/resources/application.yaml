@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: department-service
+  datasource:
+    url: jdbc:postgresql://localhost:5434/department_db
+    username: department_user
+    password: department_pass
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8083
