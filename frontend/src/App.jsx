@@ -1,11 +1,29 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import Dashboard from './pages/Dashboard'
+import EmployeeList from './pages/EmployeeList'
+import EmployeeDetail from './pages/EmployeeDetail'
+import EmployeeForm from './pages/EmployeeForm'
+import Placeholder from './pages/Placeholder'
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900">HRMS</h1>
-        <p className="mt-2 text-gray-600">Human Resource Management System</p>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/employees" element={<EmployeeList />} />
+          <Route path="/employees/new" element={<EmployeeForm />} />
+          <Route path="/employees/:id" element={<EmployeeDetail />} />
+          <Route path="/employees/:id/edit" element={<EmployeeForm />} />
+          <Route path="/departments" element={<Placeholder title="Departments" />} />
+          <Route path="/attendance" element={<Placeholder title="Attendance" />} />
+          <Route path="/leave" element={<Placeholder title="Leave Management" />} />
+          <Route path="/payroll" element={<Placeholder title="Payroll" />} />
+          <Route path="/performance" element={<Placeholder title="Performance Reviews" />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
