@@ -17,6 +17,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   # === Employee Microservice ===
   employee-service:
     container_name: employee_service
@@ -33,6 +34,79 @@ services:
     depends_on:
       employee-pg:
         condition: service_healthy
+
+  # === Department Database ===
+  department-pg:
+    container_name: department_db
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: department_db
+      POSTGRES_USER: department_user
+      POSTGRES_PASSWORD: department_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - department_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U department_user -d department_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # === Department Microservice ===
+  department-service:
+    container_name: department_service
+    build:
+      context: ./department-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://department-pg:5432/department_db
+      SPRING_DATASOURCE_USERNAME: department_user
+      SPRING_DATASOURCE_PASSWORD: department_pass
+    depends_on:
+      department-pg:
+        condition: service_healthy
+
+  # === Leave Database ===
+  leave-pg:
+    container_name: leave_db
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: leave_db
+      POSTGRES_USER: leave_user
+      POSTGRES_PASSWORD: leave_pass
+    ports:
+      - "5435:5432"
+    volumes:
+      - leave_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leave_user -d leave_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # === Leave Microservice ===
+  leave-service:
+    container_name: leave_service
+    build:
+      context: ./leave-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://leave-pg:5432/leave_db
+      SPRING_DATASOURCE_USERNAME: leave_user
+      SPRING_DATASOURCE_PASSWORD: leave_pass
+    depends_on:
+      leave-pg:
+        condition: service_healthy
+
   # === API Gateway ===
   gateway:
     container_name: hrms_gateway
@@ -44,7 +118,22 @@ services:
       - "8082:8082"
     environment:
       EMPLOYEE_SERVICE_URL: http://employee-service:8081
+      DEPARTMENT_SERVICE_URL: http://department-service:8083
+      LEAVE_SERVICE_URL: http://leave-service:8084
+      # Future services - uncomment when implemented
+      # ATTENDANCE_SERVICE_URL: http://attendance-service:8085
+      # AUTH_SERVICE_URL: http://auth-service:8086
+      # PERFORMANCE_SERVICE_URL: http://performance-service:8087
+      # PAYROLL_SERVICE_URL: http://payroll-service:8088
+      # NOTIFICATION_SERVICE_URL: http://notification-service:8089
+      # PROJECT_SERVICE_URL: http://project-service:8090
+      # DOCUMENT_SERVICE_URL: http://document-service:8091
     depends_on:
       - employee-service
+      - department-service
+      - leave-service
+
 volumes:
   employee_data:
+  department_data:
+  leave_data:
