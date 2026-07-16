@@ -25,19 +25,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findByDepartmentId(Long departmentId);
 
-    List<Employee> findByPositionId(Long positionId);
-
     List<Employee> findByManagerId(Long managerId);
 
     List<Employee> findByEmploymentStatus(EmploymentStatus status);
-
-    List<Employee> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
-            String firstName, String lastName);
-
-    @Query("SELECT e FROM Employee e WHERE e.departmentId = :departmentId AND e.employmentStatus = :status")
-    List<Employee> findByDepartmentIdAndStatus(
-            @Param("departmentId") Long departmentId,
-            @Param("status") EmploymentStatus status);
 
     @Query("SELECT e FROM Employee e WHERE LOWER(e.firstName) " +
             "LIKE LOWER(CONCAT('%', :keyword, '%')) " +
@@ -45,14 +35,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             "OR LOWER(e.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(e.employeeCode) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Employee> searchEmployees(@Param("keyword") String keyword, Pageable pageable);
-
-    @Query("SELECT e FROM Employee e WHERE e.employmentStatus = :status")
-    List<Employee> findActiveEmployees(@Param("status") EmploymentStatus status);
-
-    @Query("SELECT e FROM Employee e WHERE e.departmentId = :dept_id")
-    Page<Employee> findEmployeesByDepartment(@Param("dept_id") String dept_id, Pageable pageable);
-
-    @Query("SELECT e FROM Employee e WHERE LOWER(e.firstName) " +
-            "LIKE LOWER(CONCAT(:name, '%'))")
-    Page<Employee> findEmployeeByNameStartingWith(@Param("name") String name, Pageable pageable);
 }

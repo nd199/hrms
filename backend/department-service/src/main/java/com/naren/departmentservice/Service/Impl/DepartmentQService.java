@@ -6,8 +6,6 @@ import com.naren.departmentservice.Entity.Department;
 import com.naren.departmentservice.Exception.ResourceNotFoundException;
 import com.naren.departmentservice.Repository.DepartmentRepository;
 import com.naren.departmentservice.Service.DepartmentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("departmentQueryService")
 @Transactional(readOnly = true)
 public class DepartmentQService implements DepartmentService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DepartmentQService.class);
 
     private final DepartmentRepository repo;
     private final DepartmentMapper mapper;

@@ -7,8 +7,6 @@ import com.naren.employeeservice.Entity.Enums.EmploymentStatus;
 import com.naren.employeeservice.Exception.ResourceNotFoundException;
 import com.naren.employeeservice.Repository.EmployeeRepository;
 import com.naren.employeeservice.Service.EmployeeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ import java.util.stream.Collectors;
 @Service("employeeQueryService")
 @Transactional(readOnly = true)
 public class EmployeeQService implements EmployeeService {
-
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeQService.class);
 
     private final EmployeeRepository repo;
     private final EmployeeMapper mapper;

@@ -8,8 +8,6 @@ import com.naren.leaveservice.Entity.Enums.LeaveType;
 import com.naren.leaveservice.Exception.ResourceNotFoundException;
 import com.naren.leaveservice.Repository.LeaveRequestRepository;
 import com.naren.leaveservice.Service.LeaveRequestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +17,6 @@ import java.util.stream.Collectors;
 @Service("leaveRequestQueryService")
 @Transactional(readOnly = true)
 public class LeaveRequestQService implements LeaveRequestService {
-
-    private static final Logger logger = LoggerFactory.getLogger(LeaveRequestQService.class);
 
     private final LeaveRequestRepository repo;
     private final LeaveRequestMapper mapper;
