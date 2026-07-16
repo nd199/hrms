@@ -1,136 +1,78 @@
 # HRMS - Human Resource Management System
 
-A full-stack Human Resource Management System built with **Spring Boot 3.4.5** (Java 21) on the backend and **React 19** with **Vite** on the frontend.
+A microservices-based Human Resource Management System built with **Spring Boot 3.4.5** (Java 21) on the backend and **React 19** with **Vite** on the frontend.
 
-## Architecture Overview
+## Architecture
 
 ```
 humanresourcemanagement/
-├── backend/           # Spring Boot REST API
-│   ├── src/
-│   │   ├── main/java/com/naren/humanresourcemanagement/
-│   │   │   ├── Controller/        # REST controllers
-│   │   │   ├── DTO/               # Data Transfer Objects
-│   │   │   │   └── mapper/        # DTO mappers
-│   │   │   ├── Entity/            # JPA entities
-│   │   │   │   └── Enums/         # Enum types
-│   │   │   ├── Exception/         # Custom exceptions
-│   │   │   ├── Repository/        # JPA repositories
-│   │   │   └── Service/
-│   │   │       └── Impl/          # Service implementations (CQRS)
-│   │   └── resources/             # Application config
-│   ├── Dockerfile
+├── backend/
+│   ├── gateway/            # Spring Cloud Gateway (port 8082)
+│   ├── auth-service/       # JWT authentication & RBAC (port 8086)
+│   ├── employee-service/   # Employee CRUD + search (port 8081)
+│   ├── department-service/ # Department management (port 8083)
+│   ├── leave-service/      # Leave requests & balances (port 8084)
 │   └── docker-compose.yaml
-├── frontend/          # React + Vite SPA
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── index.css
-│   │   └── main.jsx
-│   └── public/
-└── .gitignore
+└── frontend/               # React + Vite SPA
 ```
 
 ## Tech Stack
 
-### Backend
-| Technology | Version |
+| Layer | Technology |
 |---|---|
-| Java | 21 |
-| Spring Boot | 3.4.5 |
-| PostgreSQL | 17 |
-| Maven | 3.9+ |
-| Lombok | Latest |
-| Hibernate (JPA) | Via Spring Boot |
+| Backend | Java 21, Spring Boot 3.4.5, Spring Security, JWT (Auth0 java-jwt) |
+| Database | PostgreSQL 17 (one per service) |
+| Gateway | Spring Cloud Gateway |
+| Frontend | React 19, Vite 8, Tailwind CSS 4 |
+| Infra | Docker & Docker Compose |
 
-### Frontend
-| Technology | Version |
-|---|---|
-| React | 19.2.7 |
-| Vite | 8.1.1 |
-| Tailwind CSS | 4.3.2 |
-| Oxlint | 1.71.0 |
+## Microservices
 
-### Infrastructure
-- **Docker** & Docker Compose for containerized deployment
-- **PostgreSQL 17** as the primary database
+| Service | Port | DB Port | Description |
+|---|---|---|---|
+| gateway | 8082 | - | API gateway, routes to all services |
+| auth-service | 8086 | 5436 | JWT tokens, user/role/permission management |
+| employee-service | 8081 | 5433 | Employee records, CQRS pattern |
+| department-service | 8083 | 5434 | Department CRUD, CQRS pattern |
+| leave-service | 8084 | 5435 | Leave requests & balances, CQRS pattern |
 
-## Features
-
-### Domain Entities
-- **Employee** - Core employee records with personal info, contact details, department assignment, position, manager hierarchy, shift assignment
-- **Department** - Departments with manager and location
-- **Position** - Job titles with grade and base salary
-- **Attendance** - Daily check-in/check-out tracking with working hours
-- **Leave Request** - Leave applications with type (Sick, Casual, Annual, etc.), approval workflow
-- **Payroll** - Monthly salary processing with basic salary, bonus, allowance, deduction, tax, and net salary
-- **Performance Review** - Employee performance evaluations
-- **Document** - Employee document management
-- **Notification** - System notifications for employees
-- **Shift** - Work shift definitions
-- **User** - System user accounts
-- **Holiday** - Company holiday calendar
-- **Role** - User role definitions
-
-### CQRS Pattern
-The application implements **CQRS (Command Query Responsibility Segregation)** for employees:
-- **EmployeeCService** (`@Primary`) - Handles create, update, delete operations
-- **EmployeeQService** - Handles read/query operations (get by id, search, filter by department/status/manager)
-
-### REST API Endpoints (`/api/employees`)
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/employees` | Create a new employee |
-| `GET` | `/api/employees/{id}` | Get employee by ID |
-| `GET` | `/api/employees/code/{employeeCode}` | Get employee by employee code |
-| `GET` | `/api/employees` | Get all employees (paginated) |
-| `GET` | `/api/employees/department/{departmentId}` | Get employees by department |
-| `GET` | `/api/employees/status/{status}` | Get employees by employment status |
-| `GET` | `/api/employees/manager/{managerId}` | Get employees by manager |
-| `GET` | `/api/employees/search?keyword=` | Search employees by keyword (paginated) |
-| `PUT` | `/api/employees/{id}` | Update an employee |
-| `DELETE` | `/api/employees/{id}` | Delete an employee |
-
-### Employee Fields
-- `id`, `employeeCode`, `firstName`, `lastName`, `email`, `phone`, `gender`, `dateOfBirth`, `hireDate`, `employmentStatus`, `address`, `city`, `state`, `country`, `postalCode`, `emergencyContactName`, `emergencyContactPhone`
-- Relationships: `department`, `position`, `manager`, `shift`
-
-### Search & Filtering
-- Full-text search across `firstName`, `lastName`, `email`, `employeeCode`
-- Filter by department, employment status, manager
-- Paginated responses with Spring Data `Pageable`
+Each service follows the **CQRS** pattern with separate Command (`CService`) and Query (`QService`) implementations.
 
 ## Getting Started
 
 ### Prerequisites
 - Java 21+
 - Node.js 20+
-- Docker & Docker Compose (for PostgreSQL)
+- Docker & Docker Compose
 - Maven 3.9+
 
-### 1. Start PostgreSQL
+### Start everything with Docker
 
 ```bash
 cd backend
-docker compose up -d pg
+docker compose up --build
 ```
 
-This starts PostgreSQL 17 on port **5332** with:
-- Database: `hrms`
-- Username: `hrms_user`
-- Password: `hrms_pass`
+This starts all services and their databases.
 
-### 2. Run the Backend
+### Start databases only
 
 ```bash
 cd backend
-./mvnw spring-boot:run
+docker compose up -d employee-pg department-pg leave-pg auth-pg
 ```
 
-The backend starts on **http://localhost:8080**.
+### Run services locally
 
-### 3. Run the Frontend
+```bash
+cd backend/auth-service && mvn spring-boot:run
+cd backend/employee-service && mvn spring-boot:run
+cd backend/department-service && mvn spring-boot:run
+cd backend/leave-service && mvn spring-boot:run
+cd backend/gateway && mvn spring-boot:run
+```
+
+### Run the frontend
 
 ```bash
 cd frontend
@@ -138,86 +80,55 @@ npm install
 npm run dev
 ```
 
-The frontend starts on **http://localhost:5173** (Vite default).
+Frontend runs at http://localhost:5173, Vite proxies `/api` requests to the gateway at port 8082.
 
-### 4. Full Docker Deployment
+## Auth API (`/api/auth`)
 
-To run everything (database + backend) in Docker:
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/auth/register` | - | Register a new user |
+| POST | `/api/auth/login` | - | Login, returns JWT pair |
+| POST | `/api/auth/refresh` | - | Refresh access token |
+| GET | `/api/auth/me` | Bearer | Current user info |
+| GET | `/api/auth/users` | ADMIN | List all users |
+| GET | `/api/auth/users/{id}` | Bearer | Get user by ID |
+| PUT | `/api/auth/users/{id}` | Bearer | Update user |
+| DELETE | `/api/auth/users/{id}` | ADMIN | Delete user |
+| POST | `/api/auth/roles` | ADMIN | Create role |
+| GET | `/api/auth/roles` | Bearer | List all roles |
+| POST | `/api/auth/users/{userId}/roles/{roleId}` | ADMIN | Assign role |
+| POST | `/api/auth/roles/{roleId}/permissions/{name}` | ADMIN | Add permission to role |
 
-```bash
-cd backend
-docker compose up --build
-```
+Default roles seeded on startup: `USER`, `ADMIN`.
 
-This starts:
-- **PostgreSQL 17** on port **5332**
-- **Spring Boot Backend** on port **8080**
+## Employee API (`/api/employees`)
 
-## Configuration
-
-### Backend (`backend/src/main/resources/application.yaml`)
-- **Server Port**: 8080
-- **Database URL**: `jdbc:postgresql://localhost:5332/hrms`
-- **JPA**: `ddl-auto: create` (auto-creates tables; change to `update` or `validate` for production)
-- **Hibernate**: SQL logging enabled with formatted output
-
-### Database (`backend/docker-compose.yaml`)
-- PostgreSQL 17 with health check
-- Persistent volume for data storage
-
-### Docker Build (`backend/Dockerfile`)
-- Multi-stage build:
-  1. **Build stage**: Maven 3.9 + Eclipse Temurin 21 - compiles and packages the JAR
-  2. **Runtime stage**: Eclipse Temurin 21 JRE (Alpine) - runs the JAR
-
-## API Examples
-
-### Create Employee
-
-```bash
-curl -X POST http://localhost:8080/api/employees \
-  -H "Content-Type: application/json" \
-  -d '{
-    "employeeCode": "EMP001",
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@company.com",
-    "hireDate": "2026-01-15T00:00:00",
-    "employmentStatus": "ACTIVE",
-    "departmentId": 1,
-    "positionId": 1
-  }'
-```
-
-### Search Employees
-
-```bash
-curl "http://localhost:8080/api/employees/search?keyword=john&page=0&size=10"
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/employees` | Create employee |
+| GET | `/api/employees/{id}` | Get by ID |
+| GET | `/api/employees/code/{code}` | Get by employee code |
+| GET | `/api/employees` | List all (paginated) |
+| GET | `/api/employees/department/{id}` | By department |
+| GET | `/api/employees/status/{status}` | By employment status |
+| GET | `/api/employees/manager/{id}` | By manager |
+| GET | `/api/employees/search?keyword=` | Search (paginated) |
+| PUT | `/api/employees/{id}` | Update |
+| DELETE | `/api/employees/{id}` | Delete |
 
 ## Development
 
-### Backend Test Suite
-
 ```bash
-cd backend
-./mvnw test
+# Backend tests
+cd backend && mvn test
+
+# Frontend lint
+cd frontend && npm run lint
+
+# Frontend build
+cd frontend && npm run build
 ```
 
-### Frontend Linting
+## Status
 
-```bash
-cd frontend
-npm run lint
-```
-
-### Frontend Build
-
-```bash
-cd frontend
-npm run build
-```
-
-## Project Status
-
-This project is in active development. The employee CRUD and query API is functional with CQRS pattern. Additional entity endpoints and frontend UI components are being developed.
+Active development. Employee, department, leave, and auth services are functional. Frontend UI is being developed.
