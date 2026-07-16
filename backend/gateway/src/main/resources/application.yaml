@@ -23,47 +23,11 @@ spring:
             - Path=/api/leave-requests/**
             - Path=/api/leave-balances/**
 
-        # === Attendance Service (future) ===
-        # - id: attendance-service
-        #   uri: ${ATTENDANCE_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/attendance/**
-
-        # === Auth Service (future) ===
-        # - id: auth-service
-        #   uri: ${AUTH_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/auth/**
-
-        # === Performance Service (future) ===
-        # - id: performance-service
-        #   uri: ${PERFORMANCE_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/performance-reviews/**
-
-        # === Payroll Service (future - async) ===
-        # - id: payroll-service
-        #   uri: ${PAYROLL_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/payrolls/**
-
-        # === Notification Service (future - async) ===
-        # - id: notification-service
-        #   uri: ${NOTIFICATION_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/notifications/**
-
-        # === Project Service (future - optional) ===
-        # - id: project-service
-        #   uri: ${PROJECT_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/projects/**
-
-        # === Document Service (future) ===
-        # - id: document-service
-        #   uri: ${DOCUMENT_SERVICE_URL}
-        #   predicates:
-        #     - Path=/api/documents/**
+        # === Auth Service ===
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL}
+          predicates:
+            - Path=/api/auth/**
 
       globalcors:
         corsConfiguration:

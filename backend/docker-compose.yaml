@@ -107,6 +107,43 @@ services:
       leave-pg:
         condition: service_healthy
 
+  # === Auth Database ===
+  auth-pg:
+    container_name: auth_db
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+    ports:
+      - "5436:5432"
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_user -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # === Auth Microservice ===
+  auth-service:
+    container_name: auth_service
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-pg:5432/auth_db
+      SPRING_DATASOURCE_USERNAME: auth_user
+      SPRING_DATASOURCE_PASSWORD: auth_pass
+      JWT_SECRET: ${JWT_SECRET:-your-256-bit-secret-key-change-in-production-env-var}
+    depends_on:
+      auth-pg:
+        condition: service_healthy
+
   # === API Gateway ===
   gateway:
     container_name: hrms_gateway
@@ -120,20 +157,15 @@ services:
       EMPLOYEE_SERVICE_URL: http://employee-service:8081
       DEPARTMENT_SERVICE_URL: http://department-service:8083
       LEAVE_SERVICE_URL: http://leave-service:8084
-      # Future services - uncomment when implemented
-      # ATTENDANCE_SERVICE_URL: http://attendance-service:8085
-      # AUTH_SERVICE_URL: http://auth-service:8086
-      # PERFORMANCE_SERVICE_URL: http://performance-service:8087
-      # PAYROLL_SERVICE_URL: http://payroll-service:8088
-      # NOTIFICATION_SERVICE_URL: http://notification-service:8089
-      # PROJECT_SERVICE_URL: http://project-service:8090
-      # DOCUMENT_SERVICE_URL: http://document-service:8091
+      AUTH_SERVICE_URL: http://auth-service:8086
     depends_on:
       - employee-service
       - department-service
       - leave-service
+      - auth-service
 
 volumes:
   employee_data:
   department_data:
   leave_data:
+  auth_data:
